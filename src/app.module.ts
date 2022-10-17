@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './products/poducts.module';
+import { NotationsModule } from './notations/notations.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       envFilePath: ['.env.local'],
     }),
-    ProductsModule,
+    NotationsModule,
     MongooseModule.forRoot(process.env.DATA_BASE_URL),
   ],
   controllers: [AppController],
