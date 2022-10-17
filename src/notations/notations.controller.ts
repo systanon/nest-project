@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  Query,
 } from '@nestjs/common';
 import { CreateNotationDto } from './dto/create-notation.dto';
 import { UpdateNotationDto } from './dto/update-notation.dto';
@@ -20,8 +21,14 @@ export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
 
   @Get()
-  getAll(): Promise<Notation[]> {
-    return this.notationsService.getAll();
+  getAll(
+    @Query('offset') offset: string,
+    @Query('limit') limit: string,
+    @Query('search') search: string,
+  ): Promise<Notation[]> {
+    const _offset = +offset || 0;
+    const _limit = +limit || 4;
+    return this.notationsService.getAll(_offset, _limit, search);
   }
 
   @Get(':id')
