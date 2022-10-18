@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { rejects } from 'assert';
 import { Model } from 'mongoose';
-import { CreateNotationDto } from './dto/create-notation.dto';
-import { UpdateNotationDto } from './dto/update-notation.dto';
+import {
+  NotationCreateDto,
+  NotationUpdateDto,
+  NotationReplaceDto,
+} from './dto/notation.dto';
 import { Notation, NotationDocument } from './schemas/notation.schema';
 
 @Injectable()
@@ -25,12 +27,12 @@ export class NotationsService {
     return this.notationModel.find(filter, projection, options).exec();
   }
 
-  async getById(id: string): Promise<Notation> {
-    return this.notationModel.findById(id);
+  getById(id: string): Promise<Notation> {
+    return this.notationModel.findById(id).exec();
   }
 
-  create(notationDto: CreateNotationDto): Promise<Notation> {
-    const newNotation = new this.notationModel(notationDto);
+  create(dto: NotationCreateDto): Promise<Notation> {
+    const newNotation = new this.notationModel(dto);
     return newNotation.save();
   }
 
@@ -38,13 +40,14 @@ export class NotationsService {
     return this.notationModel.findByIdAndRemove(id);
   }
 
-  async update(id: string, notationDto: UpdateNotationDto): Promise<Notation> {
-    return this.notationModel.findByIdAndUpdate(id, notationDto, { new: true });
+  async replace(id: string, dto: NotationReplaceDto): Promise<Notation> {
+    // TODO: CHECK REPLACE
+    // TODO: FIX RETURN RESULT TYPE (CREATE/UPDATE)
+    return this.notationModel.findByIdAndUpdate(id, dto, { new: true });
   }
-  async updateOne(
-    id: string,
-    notationDto: UpdateNotationDto,
-  ): Promise<Notation> {
-    return this.notationModel.findByIdAndUpdate(id, notationDto, { new: true });
+
+  async update(id: string, dto: NotationUpdateDto): Promise<Notation> {
+    // TODO: CHECK UPDATE
+    return this.notationModel.findByIdAndUpdate(id, dto, { new: true });
   }
 }

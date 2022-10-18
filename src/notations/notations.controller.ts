@@ -5,14 +5,18 @@ import {
   Post,
   Delete,
   Param,
+  Patch,
   Put,
   HttpCode,
   HttpStatus,
   Header,
   Query,
 } from '@nestjs/common';
-import { CreateNotationDto } from './dto/create-notation.dto';
-import { UpdateNotationDto } from './dto/update-notation.dto';
+import {
+  NotationCreateDto,
+  NotationUpdateDto,
+  NotationReplaceDto,
+} from './dto/notation.dto';
 import { NotationsService } from './notations.service';
 import { Notation } from './schemas/notation.schema';
 
@@ -39,19 +43,24 @@ export class NotationsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-control', 'none')
-  create(@Body() CreateNotation: CreateNotationDto) {
-    return this.notationsService.create(CreateNotation);
+  create(@Body() dto: NotationCreateDto) {
+    return this.notationsService.create(dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.notationsService.remove(id);
   }
+
   @Put(':id')
-  update(
-    @Body() updateNotation: UpdateNotationDto,
-    @Param('id') id,
-  ): Promise<Notation> {
-    return this.notationsService.update(id, updateNotation);
+  replace(@Body() dto: NotationReplaceDto, @Param('id') id): Promise<Notation> {
+    // TODO: CHECK RETURN RESULT TYPE (CREATE/UPDATE)
+    // TODO: SET HTTP STATUS CODE (201/200)
+    return this.notationsService.update(id, dto);
+  }
+
+  @Patch(':id')
+  update(@Body() dto: NotationUpdateDto, @Param('id') id): Promise<Notation> {
+    return this.notationsService.update(id, dto);
   }
 }

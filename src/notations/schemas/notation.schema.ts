@@ -3,13 +3,19 @@ import { Document } from 'mongoose';
 
 export type NotationDocument = Notation & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Notation {
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   description: string;
+
+  @Prop({
+    default: false,
+    required: false,
+  })
+  complete: boolean;
 }
 
 export const NotationSchema = SchemaFactory.createForClass(Notation);
