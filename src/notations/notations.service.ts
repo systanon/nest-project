@@ -40,14 +40,12 @@ export class NotationsService {
     return this.notationModel.findByIdAndRemove(id);
   }
 
-  async replace(id: string, dto: NotationReplaceDto): Promise<Notation> {
-    // TODO: CHECK REPLACE
-    // TODO: FIX RETURN RESULT TYPE (CREATE/UPDATE)
-    return this.notationModel.findByIdAndUpdate(id, dto, { new: true });
+  async replace(_id: string, dto: NotationReplaceDto): Promise<Notation> {
+    const filter = { _id };
+    return this.notationModel.findOneAndReplace(filter, dto, { upsert: true });
   }
 
   async update(id: string, dto: NotationUpdateDto): Promise<Notation> {
-    // TODO: CHECK UPDATE
     return this.notationModel.findByIdAndUpdate(id, dto, { new: true });
   }
 }
