@@ -36,7 +36,7 @@ export class NotationsController {
   }
 
   @Get(':id')
-  getOne(@Param(':id') id: string): Promise<Notation> {
+  getOne(@Param('id') id: string): Promise<Notation> {
     return this.notationsService.getById(id);
   }
 
