@@ -7,6 +7,7 @@ import {
   NotationReplaceDto,
 } from './dto/notation.dto';
 import { Notation, NotationDocument } from './schemas/notation.schema';
+import { Pagination } from '../types/pagination';
 
 @Injectable()
 export class NotationsService {
@@ -14,7 +15,7 @@ export class NotationsService {
     @InjectModel(Notation.name) private notationModel: Model<NotationDocument>,
   ) {}
 
-  getAll(offset: number, limit: number, search: string): Promise<Notation[]> {
+  getAll({ offset, limit }: Pagination, search: string): Promise<Notation[]> {
     const filter: Record<string, any> = {};
     if (search) {
       const regExp = new RegExp(search, 'ig');

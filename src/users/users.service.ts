@@ -3,12 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { User, UserDocument } from './schemas/user.schema';
+import { Pagination } from '../types/pagination';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  getAll(offset: number, limit: number, search: string): Promise<User[]> {
+  getAll({ offset, limit }: Pagination, search: string): Promise<User[]> {
     const filter: Record<string, any> = {};
     if (search) {
       const regExp = new RegExp(search, 'ig');

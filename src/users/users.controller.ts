@@ -14,20 +14,18 @@ import {
 import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 import { User } from './schemas/user.schema';
+import { Pagination } from '../types/pagination';
+import { GetPagination } from '../decorators/pagination.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
   @Get()
   getAll(
-    @Query('offset') offset: string,
-    @Query('limit') limit: string,
     @Query('search') search: string,
+    @GetPagination() pagination: Pagination,
   ): Promise<User[]> {
-    const _offset = +offset || 0;
-    const _limit = +limit || 4;
-    return this.usersService.getAll(_offset, _limit, search);
+    return this.usersService.getAll(pagination, search);
   }
 
   @Get(':id')

@@ -19,20 +19,18 @@ import {
 } from './dto/notation.dto';
 import { NotationsService } from './notations.service';
 import { Notation } from './schemas/notation.schema';
-
+import { Pagination } from '../types/pagination';
+import { GetPagination } from '../decorators/pagination.decorator';
 @Controller('notations')
 export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
 
   @Get()
   getAll(
-    @Query('offset') offset: string,
-    @Query('limit') limit: string,
+    @GetPagination() pagination: Pagination,
     @Query('search') search: string,
   ): Promise<Notation[]> {
-    const _offset = +offset || 0;
-    const _limit = +limit || 4;
-    return this.notationsService.getAll(_offset, _limit, search);
+    return this.notationsService.getAll(pagination, search);
   }
 
   @Get(':id')
@@ -54,8 +52,6 @@ export class NotationsController {
 
   @Put(':id')
   replace(@Body() dto: NotationReplaceDto, @Param('id') id): Promise<Notation> {
-    // TODO: CHECK RETURN RESULT TYPE (CREATE/UPDATE)
-    // TODO: SET HTTP STATUS CODE (201/200)
     return this.notationsService.update(id, dto);
   }
 
