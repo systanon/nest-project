@@ -21,6 +21,8 @@ import { NotationsService } from './notations.service';
 import { Notation } from './schemas/notation.schema';
 import { Pagination } from '../types/pagination';
 import { GetPagination } from '../decorators/pagination.decorator';
+import { Filters } from '../types/filters';
+import { GetFilters } from '../decorators/filters.decorator';
 @Controller('notations')
 export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
@@ -28,9 +30,9 @@ export class NotationsController {
   @Get()
   getAll(
     @GetPagination() pagination: Pagination,
-    @Query('search') search: string,
+    @GetFilters() filters: Filters,
   ): Promise<Notation[]> {
-    return this.notationsService.getAll(pagination, search);
+    return this.notationsService.getAll(pagination, filters);
   }
 
   @Get(':id')

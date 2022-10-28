@@ -8,6 +8,7 @@ import {
 } from './dto/notation.dto';
 import { Notation, NotationDocument } from './schemas/notation.schema';
 import { Pagination } from '../types/pagination';
+import { Filters } from '../types/filters';
 
 @Injectable()
 export class NotationsService {
@@ -15,11 +16,15 @@ export class NotationsService {
     @InjectModel(Notation.name) private notationModel: Model<NotationDocument>,
   ) {}
 
-  getAll({ offset, limit }: Pagination, search: string): Promise<Notation[]> {
+  getAll(
+    { offset, limit }: Pagination,
+    { search }: Filters,
+  ): Promise<Notation[]> {
     const filter: Record<string, any> = {};
-    if (search) {
-      const regExp = new RegExp(search, 'ig');
-      filter.$or = [{ title: regExp }, { description: regExp }];
+    if (search.length > 0) {
+      filter.$or = search.map(({ field, value }) => ({
+        [field]: new RegExp(value, 'ig'),
+      }));
     }
     const options = { skip: offset, limit };
     const projection = {

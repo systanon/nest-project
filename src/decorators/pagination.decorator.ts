@@ -22,8 +22,6 @@ export const GetPagination = createParamDecorator(
     const paginationParams: Pagination = {
       offset: 0,
       limit: 10,
-      sort: [],
-      search: [],
     };
 
     const limit = getLimit(query) || defaultLimit;

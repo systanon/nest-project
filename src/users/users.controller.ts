@@ -16,16 +16,18 @@ import { UsersService } from './users.service';
 import { User } from './schemas/user.schema';
 import { Pagination } from '../types/pagination';
 import { GetPagination } from '../decorators/pagination.decorator';
+import { Filters } from '../types/filters';
+import { GetFilters } from '../decorators/filters.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
   getAll(
-    @Query('search') search: string,
     @GetPagination() pagination: Pagination,
+    @GetFilters() filters: Filters,
   ): Promise<User[]> {
-    return this.usersService.getAll(pagination, search);
+    return this.usersService.getAll(pagination, filters);
   }
 
   @Get(':id')

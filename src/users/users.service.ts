@@ -4,21 +4,17 @@ import { Model } from 'mongoose';
 import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Pagination } from '../types/pagination';
-
+import { Filters } from '../types/filters';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  getAll({ offset, limit }: Pagination, search: string): Promise<User[]> {
+  getAll({ offset, limit }: Pagination, { search }: Filters): Promise<User[]> {
     const filter: Record<string, any> = {};
-    if (search) {
-      const regExp = new RegExp(search, 'ig');
-      filter.$or = [
-        { firstName: regExp },
-        { login: regExp },
-        { lastName: regExp },
-        { email: regExp },
-      ];
+    if (search.length > 0) {
+      filter.$or = search.map(({ field, value }) => ({
+        [field]: new RegExp(value, 'ig'),
+      }));
     }
     const options = { skip: offset, limit };
     const projection = {
