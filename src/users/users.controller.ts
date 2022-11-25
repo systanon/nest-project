@@ -35,12 +35,12 @@ export class UsersController {
     return this.usersService.getById(id);
   }
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @Header('Cache-control', 'none')
-  create(@Body() dto: UserCreateDto) {
-    return this.usersService.create(dto);
-  }
+  // @Post()
+  // @HttpCode(HttpStatus.CREATED)
+  // @Header('Cache-control', 'none')
+  // create(@Body() dto: UserCreateDto) {
+  //   return this.usersService.create(dto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

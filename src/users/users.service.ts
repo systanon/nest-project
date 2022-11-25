@@ -26,6 +26,13 @@ export class UsersService {
   getById(id: string): Promise<User> {
     return this.userModel.findById(id).exec();
   }
+  findCandidate(email: string, login: string): Promise<User> {
+    return this.userModel.findOne({ $or: [{ email }, { login }] }).exec();
+  }
+
+  findByEmail(email: string): Promise<UserDocument> {
+    return this.userModel.findOne({ email }).exec();
+  }
 
   create(dto: UserCreateDto): Promise<User> {
     const newUser = new this.userModel(dto);

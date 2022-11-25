@@ -1,0 +1,16 @@
+export enum Header {
+  AccessControlAllowCredentials = 'Access-Control-Allow-Credentials',
+  AccessControlExposeHeaders = 'Access-Control-Expose-Headers',
+  Authorization = 'authorization',
+  ContentLocation = 'Content-Location',
+  Location = 'Location',
+  XContentTypeOptions = 'X-Content-Type-Options',
+  XPoweredBy = 'X-Powered-By',
+  XRatelimitLimit = 'X-Ratelimit-Limit',
+  XRatelimitRemaining = 'X-Ratelimit-Remaining',
+  XRatelimitReset = 'X-Ratelimit-Reset',
+  XResourceID = 'X-Resource-ID',
+  XSRFToken = 'x-xsrf-token',
+  XTotalCount = 'X-Total-Count',
+  XTotalPages = 'X-Total-Pages',
+}

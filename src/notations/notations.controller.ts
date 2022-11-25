@@ -23,10 +23,12 @@ import { Pagination } from '../types/pagination';
 import { GetPagination } from '../decorators/pagination.decorator';
 import { Filters } from '../types/filters';
 import { GetFilters } from '../decorators/filters.decorator';
+import { Public } from 'src/decorators/public.decorator';
 @Controller('notations')
 export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
 
+  @Public()
   @Get()
   getAll(
     @GetPagination() pagination: Pagination,
@@ -38,6 +40,11 @@ export class NotationsController {
   @Get(':id')
   getOne(@Param('id') id: string): Promise<Notation> {
     return this.notationsService.getById(id);
+  }
+
+  @Get('test')
+  test(): string {
+    return 'test';
   }
 
   @Post()

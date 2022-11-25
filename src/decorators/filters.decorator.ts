@@ -37,7 +37,7 @@ export const GetFilters = createParamDecorator(
     }
 
     // create array of search
-    if (req.query.search.length > 0) {
+    if (req.query.search?.length > 0) {
       const _search = (req.query.search as string[])
         .map((str) => {
           try {
@@ -48,7 +48,7 @@ export const GetFilters = createParamDecorator(
         })
         .filter(({ field, value }) => field && value);
 
-      if (_search.length > 0) filtersParams.search = _search;
+      if (_search?.length > 0) filtersParams.search = _search;
     }
 
     return filtersParams;
