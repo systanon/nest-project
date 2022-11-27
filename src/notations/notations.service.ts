@@ -10,16 +10,22 @@ import { Notation, NotationDocument } from './schemas/notation.schema';
 import { Pagination } from '../types/pagination';
 import { Filters } from '../types/filters';
 
+const howManyPages = (total: number, limit: number) => Math.ceil(total / limit);
+
 @Injectable()
 export class NotationsService {
   constructor(
     @InjectModel(Notation.name) private notationModel: Model<NotationDocument>,
   ) {}
 
-  getAll(
+  async getAll(
     { offset, limit }: Pagination,
     { search }: Filters,
-  ): Promise<Notation[]> {
+  ): Promise<{
+    data: Array<Notation>;
+    total: number;
+    pages: number;
+  }> {
     const filter: Record<string, any> = {};
     if (search.length > 0) {
       filter.$or = search.map(({ field, value }) => ({
@@ -30,7 +36,29 @@ export class NotationsService {
     const projection = {
       __v: 0,
     };
-    return this.notationModel.find(filter, projection, options).exec();
+
+    // return this.notationModel.find(filter, projection, options).exec();
+
+    const promises: Array<any> = [
+      this.notationModel
+        .find(filter, {
+          _id: 1,
+        })
+        .countDocuments()
+        .lean(),
+      this.notationModel
+        .find(filter, projection, options)
+        .sort({ createdAt: 1 }),
+      // .skip(paginate.offset)
+      // .limit(paginate.limit),
+    ];
+    const [total, data] = await Promise.all(promises);
+
+    return {
+      data: data as Array<Notation>,
+      total: total as number,
+      pages: howManyPages(total as number, limit),
+    };
   }
 
   getById(id: string): Promise<Notation> {

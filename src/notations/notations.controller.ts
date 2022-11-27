@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Header,
   Query,
+  Res,
 } from '@nestjs/common';
 import {
   NotationCreateDto,
@@ -24,17 +25,28 @@ import { GetPagination } from '../decorators/pagination.decorator';
 import { Filters } from '../types/filters';
 import { GetFilters } from '../decorators/filters.decorator';
 import { Public } from 'src/decorators/public.decorator';
+import { Response } from 'express';
+
 @Controller('notations')
 export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
 
   @Public()
   @Get()
-  getAll(
+  async getAll(
     @GetPagination() pagination: Pagination,
     @GetFilters() filters: Filters,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Notation[]> {
-    return this.notationsService.getAll(pagination, filters);
+    const { data, total, pages } = await this.notationsService.getAll(
+      pagination,
+      filters,
+    );
+
+    res.setHeader('X-Total-Count', total);
+    res.setHeader('X-Total-Pages', pages);
+
+    return data;
   }
 
   @Get(':id')
