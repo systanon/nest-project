@@ -5,11 +5,6 @@ export class NotationCreateDto {
 
   @IsString()
   readonly description: string;
-
-  @Equals(false)
-  @IsBoolean()
-  @IsOptional()
-  readonly complete?: boolean;
 }
 
 export class NotationUpdateDto {
@@ -18,9 +13,6 @@ export class NotationUpdateDto {
 
   @IsString()
   readonly description?: string;
-
-  @IsBoolean()
-  readonly complete?: boolean;
 }
 
 export class NotationReplaceDto {
@@ -29,7 +21,4 @@ export class NotationReplaceDto {
 
   @IsString()
   readonly description: string;
-
-  @IsBoolean()
-  readonly complete?: boolean;
 }

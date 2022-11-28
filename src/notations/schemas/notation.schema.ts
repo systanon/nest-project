@@ -5,17 +5,16 @@ export type NotationDocument = Notation & Document;
 
 @Schema({ timestamps: true })
 export class Notation {
+  @Prop({
+    required: true,
+  })
+  userId: string;
+
   @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
   description: string;
-
-  @Prop({
-    default: false,
-    required: false,
-  })
-  complete: boolean;
 }
 
 export const NotationSchema = SchemaFactory.createForClass(Notation);

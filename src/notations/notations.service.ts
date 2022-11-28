@@ -19,6 +19,7 @@ export class NotationsService {
   ) {}
 
   async getAll(
+    userId: string,
     { offset, limit }: Pagination,
     { search }: Filters,
   ): Promise<{
@@ -26,7 +27,11 @@ export class NotationsService {
     total: number;
     pages: number;
   }> {
-    const filter: Record<string, any> = {};
+    console.log(
+      '🚀 ~ file: notations.service.ts ~ line 26 ~ NotationsService ~ userId',
+      userId,
+    );
+    const filter: Record<string, any> = { userId };
     if (search.length > 0) {
       filter.$or = search.map(({ field, value }) => ({
         [field]: new RegExp(value, 'ig'),
@@ -36,8 +41,6 @@ export class NotationsService {
     const projection = {
       __v: 0,
     };
-
-    // return this.notationModel.find(filter, projection, options).exec();
 
     const promises: Array<any> = [
       this.notationModel
@@ -49,8 +52,6 @@ export class NotationsService {
       this.notationModel
         .find(filter, projection, options)
         .sort({ createdAt: 1 }),
-      // .skip(paginate.offset)
-      // .limit(paginate.limit),
     ];
     const [total, data] = await Promise.all(promises);
 
@@ -61,25 +62,33 @@ export class NotationsService {
     };
   }
 
-  getById(id: string): Promise<Notation> {
-    return this.notationModel.findById(id).exec();
+  getById(userId: string, _id: string): Promise<Notation> {
+    return this.notationModel.findOne({ _id, userId }).exec();
   }
 
-  create(dto: NotationCreateDto): Promise<Notation> {
-    const newNotation = new this.notationModel(dto);
+  create(userId: string, dto: NotationCreateDto): Promise<Notation> {
+    const newNotation = new this.notationModel({ ...dto, userId });
     return newNotation.save();
   }
 
-  remove(id: string) {
-    return this.notationModel.findByIdAndRemove(id);
+  remove(userId: string, _id: string) {
+    return this.notationModel.findOneAndRemove({ _id, userId });
   }
 
-  async replace(_id: string, dto: NotationReplaceDto): Promise<Notation> {
-    const filter = { _id };
+  async replace(
+    userId: string,
+    _id: string,
+    dto: NotationReplaceDto,
+  ): Promise<Notation> {
+    const filter = { _id, userId };
     return this.notationModel.findOneAndReplace(filter, dto, { upsert: true });
   }
 
-  async update(id: string, dto: NotationUpdateDto): Promise<Notation> {
-    return this.notationModel.findByIdAndUpdate(id, dto, { new: true });
+  async update(
+    userId: string,
+    _id: string,
+    dto: NotationUpdateDto,
+  ): Promise<Notation> {
+    return this.notationModel.findOneAndUpdate({ _id, userId }, dto);
   }
 }
