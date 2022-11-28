@@ -27,10 +27,6 @@ export class NotationsService {
     total: number;
     pages: number;
   }> {
-    console.log(
-      '🚀 ~ file: notations.service.ts ~ line 26 ~ NotationsService ~ userId',
-      userId,
-    );
     const filter: Record<string, any> = { userId };
     if (search.length > 0) {
       filter.$or = search.map(({ field, value }) => ({

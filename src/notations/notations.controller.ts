@@ -10,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
   Header,
-  Query,
   Res,
 } from '@nestjs/common';
 import {

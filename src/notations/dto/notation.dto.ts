@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsOptional, Equals } from 'class-validator';
+import { IsString } from 'class-validator';
 export class NotationCreateDto {
   @IsString()
   readonly title: string;

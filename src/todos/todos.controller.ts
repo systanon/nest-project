@@ -7,10 +7,6 @@ import {
   Param,
   Patch,
   Put,
-  HttpCode,
-  HttpStatus,
-  Header,
-  Query,
   Res,
 } from '@nestjs/common';
 import { TodoCreateDto, TodoUpdateDto, TodoReplaceDto } from './dto/todo.dto';
