@@ -54,11 +54,6 @@ export class NotationsController {
     return this.notationsService.getById(id);
   }
 
-  @Get('test')
-  test(): string {
-    return 'test';
-  }
-
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-control', 'none')
