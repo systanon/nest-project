@@ -1,20 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type NotationDocument = Notation & Document;
+export type TodoDocument = Todo & Document;
 
 @Schema({ timestamps: true })
-export class Notation {
-  @Prop({
-    required: true,
-  })
-  userId: string;
-
+export class Todo {
   @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
   description: string;
+
+  @Prop({
+    default: false,
+    required: false,
+  })
+  complete: boolean;
 }
 
-export const NotationSchema = SchemaFactory.createForClass(Notation);
+export const TodoSchema = SchemaFactory.createForClass(Todo);

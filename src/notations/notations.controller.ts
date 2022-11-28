@@ -10,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
   Header,
-  Query,
   Res,
 } from '@nestjs/common';
 import {
@@ -24,21 +23,22 @@ import { Pagination } from '../types/pagination';
 import { GetPagination } from '../decorators/pagination.decorator';
 import { Filters } from '../types/filters';
 import { GetFilters } from '../decorators/filters.decorator';
-import { Public } from 'src/decorators/public.decorator';
 import { Response } from 'express';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('notations')
 export class NotationsController {
   constructor(private readonly notationsService: NotationsService) {}
 
-  @Public()
   @Get()
   async getAll(
     @GetPagination() pagination: Pagination,
     @GetFilters() filters: Filters,
     @Res({ passthrough: true }) res: Response,
+    @User() user: any,
   ): Promise<Notation[]> {
     const { data, total, pages } = await this.notationsService.getAll(
+      user.userId,
       pagination,
       filters,
     );
@@ -50,34 +50,37 @@ export class NotationsController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string): Promise<Notation> {
-    return this.notationsService.getById(id);
-  }
-
-  @Get('test')
-  test(): string {
-    return 'test';
+  getOne(@Param('id') id: string, @User() user: any): Promise<Notation> {
+    return this.notationsService.getById(user.userId, id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-control', 'none')
-  create(@Body() dto: NotationCreateDto) {
-    return this.notationsService.create(dto);
+  create(@Body() dto: NotationCreateDto, @User() user: any) {
+    return this.notationsService.create(user.userId, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notationsService.remove(id);
+  remove(@Param('id') id: string, @User() user: any) {
+    return this.notationsService.remove(user.userId, id);
   }
 
   @Put(':id')
-  replace(@Body() dto: NotationReplaceDto, @Param('id') id): Promise<Notation> {
-    return this.notationsService.update(id, dto);
+  replace(
+    @Body() dto: NotationReplaceDto,
+    @Param('id') id,
+    @User() user: any,
+  ): Promise<Notation> {
+    return this.notationsService.update(user.userId, id, dto);
   }
 
   @Patch(':id')
-  update(@Body() dto: NotationUpdateDto, @Param('id') id): Promise<Notation> {
-    return this.notationsService.update(id, dto);
+  update(
+    @Body() dto: NotationUpdateDto,
+    @Param('id') id,
+    @User() user: any,
+  ): Promise<Notation> {
+    return this.notationsService.update(user.userId, id, dto);
   }
 }

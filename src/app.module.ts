@@ -15,6 +15,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthMiddleware } from './middlewares/auth.middlewares';
 import { AuthModule } from './auth/auth.module';
+import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: ['.env.local'],
     }),
     NotationsModule,
+    TodosModule,
     UsersModule,
     MongooseModule.forRoot(process.env.DATA_BASE_URL),
     AuthModule,
