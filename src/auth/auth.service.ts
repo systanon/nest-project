@@ -72,6 +72,13 @@ export class AuthService {
     return { refreshToken, accessToken };
   }
 
+  async logout(user: any, refreshToken: string, all: boolean) {
+    // TODO:
+    // Remove (one/all) refresh token(s) from DB
+    // Add (one/all) refresh token(s) to black list
+    // Remove all expired refresh tokens
+  }
+
   async registration(dto: RegistrationDto): Promise<User> {
     // TODO:
     // 1.search user with the same login and email

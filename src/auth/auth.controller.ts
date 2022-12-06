@@ -37,6 +37,19 @@ export class AuthController {
     return { accessToken };
   }
 
+  @Post('logout')
+  async logout(
+    @User() user: any,
+    @Cookies('refreshToken') refreshToken: string,
+    @Body() body: { all: boolean },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { all = false } = body || {};
+    await this.authService.logout(user, refreshToken, all);
+    res.clearCookie('refreshToken');
+    res.status(HttpStatus.OK);
+  }
+
   @Public()
   @Post('registration')
   registration(@Body() dto: RegistrationDto) {
