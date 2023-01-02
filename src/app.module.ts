@@ -16,6 +16,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AuthMiddleware } from './middlewares/auth.middlewares';
 import { AuthModule } from './auth/auth.module';
 import { TodosModule } from './todos/todos.module';
+import { RealtimeModule } from './realtime/realtime.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TodosModule } from './todos/todos.module';
     UsersModule,
     MongooseModule.forRoot(process.env.DATA_BASE_URL),
     AuthModule,
+    RealtimeModule,
   ],
   controllers: [AppController],
   providers: [

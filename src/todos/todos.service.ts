@@ -5,6 +5,7 @@ import { TodoCreateDto, TodoUpdateDto, TodoReplaceDto } from './dto/todo.dto';
 import { Todo, TodoDocument } from './schemas/todo.schema';
 import { Pagination } from '../types/pagination';
 import { Filters } from '../types/filters';
+import { realtimeBus } from 'src/realtime/realtime.bus';
 
 const howManyPages = (total: number, limit: number) => Math.ceil(total / limit);
 
@@ -55,21 +56,26 @@ export class TodosService {
     return this.todoModel.findById(id).exec();
   }
 
-  create(dto: TodoCreateDto): Promise<TodoDocument> {
+  async create(dto: TodoCreateDto): Promise<TodoDocument> {
     const newTodo = new this.todoModel(dto);
-    return newTodo.save();
+    const todoDocument = await newTodo.save();
+    realtimeBus.emit('todo:insert', todoDocument);
+    return todoDocument;
   }
 
-  remove(id: string) {
-    return this.todoModel.findByIdAndRemove(id);
+  remove(_id: string) {
+    realtimeBus.emit('todo:remove', { _id });
+    return this.todoModel.findByIdAndRemove(_id);
   }
 
   async replace(_id: string, dto: TodoReplaceDto): Promise<TodoDocument> {
+    realtimeBus.emit('todo:replace', { complete: false, ...dto, _id });
     const filter = { _id };
     return this.todoModel.findOneAndReplace(filter, dto, { upsert: true });
   }
 
-  async update(id: string, dto: TodoUpdateDto): Promise<TodoDocument> {
-    return this.todoModel.findByIdAndUpdate(id, dto, { new: true });
+  async update(_id: string, dto: TodoUpdateDto): Promise<TodoDocument> {
+    realtimeBus.emit('todo:update', { ...dto, _id });
+    return this.todoModel.findByIdAndUpdate(_id, dto, { new: true });
   }
 }

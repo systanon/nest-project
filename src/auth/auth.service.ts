@@ -99,7 +99,7 @@ export class AuthService {
       // return blackList.includes(tokenPayload.jti) ? null : tokenPayload;
     } catch (e) {
       // TODO: add logger
-      console.error('🚀 ~ validateAccessToken ~ e', e);
+      // console.error('🚀 ~ validateAccessToken ~ e', e);
       return null;
     }
   }
