@@ -69,7 +69,7 @@ export class TodosService {
   }
 
   async replace(_id: string, dto: TodoReplaceDto): Promise<TodoDocument> {
-    realtimeBus.emit('todo:replace', { complete: false, ...dto, _id });
+    realtimeBus.emit('todo:replace', { completed: false, ...dto, _id });
     const filter = { _id };
     return this.todoModel.findOneAndReplace(filter, dto, { upsert: true });
   }

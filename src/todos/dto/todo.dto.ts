@@ -17,7 +17,7 @@ export class TodoCreateDto {
   @Equals(false)
   @IsBoolean()
   @IsOptional()
-  readonly complete?: boolean;
+  readonly completed?: boolean;
 }
 
 export class TodoUpdateDto {
@@ -33,7 +33,7 @@ export class TodoUpdateDto {
 
   @IsBoolean()
   @IsOptional()
-  readonly complete?: boolean;
+  readonly completed?: boolean;
 }
 
 export class TodoReplaceDto {
@@ -46,5 +46,5 @@ export class TodoReplaceDto {
   readonly description: string;
 
   @IsBoolean()
-  readonly complete: boolean;
+  readonly completed: boolean;
 }

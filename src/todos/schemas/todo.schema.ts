@@ -15,7 +15,7 @@ export class Todo {
     default: false,
     required: false,
   })
-  complete: boolean;
+  completed: boolean;
 }
 
 export const TodoSchema = SchemaFactory.createForClass(Todo);
