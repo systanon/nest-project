@@ -17,6 +17,9 @@ import { AuthMiddleware } from './middlewares/auth.middlewares';
 import { AuthModule } from './auth/auth.module';
 import { TodosModule } from './todos/todos.module';
 import { RealtimeModule } from './realtime/realtime.module';
+import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { resolve } from 'path';
 
 @Module({
   imports: [
@@ -29,6 +32,12 @@ import { RealtimeModule } from './realtime/realtime.module';
     MongooseModule.forRoot(process.env.DATA_BASE_URL),
     AuthModule,
     RealtimeModule,
+    FilesModule,
+    ServeStaticModule.forRoot({
+      rootPath: resolve('upload-files'),
+      exclude: ['/api*'],
+      serveRoot: '/files',
+    }),
   ],
   controllers: [AppController],
   providers: [
