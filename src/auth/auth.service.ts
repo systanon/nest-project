@@ -4,16 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { CheckCandidateDto, LoginDto, RegistrationDto } from './dto/auth.dto';
 import { User, UserDocument } from './schemas/auth.schema';
-import { Pagination } from '../types/pagination';
-import { Filters } from '../types/filters';
 import { UsersService } from 'src/users/users.service';
 import { UnixTimestamp } from 'src/types/time';
-import { fromUnixTime, toUnixTime } from 'src/utils/time';
 import { CachedUser } from 'src/types/cached-user';
+import { toUnixTime } from 'src/utils/time';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwt = require('jsonwebtoken');
@@ -45,8 +41,6 @@ export class AuthService {
     return false;
   }
   async login(dto: LoginDto) {
-    //TODO:
-    // search user with same
     const user = await this.usersService.findCandidate(
       dto.loginOrEmail,
       dto.loginOrEmail,
@@ -127,7 +121,7 @@ export class AuthService {
     };
 
     const accessToken = <string>jwt.sign(
-      refreshTokenPayload,
+      accessTokenPayload,
       JWT_ACCESS_SECRET,
       {
         algorithm: 'HS256',
@@ -137,7 +131,7 @@ export class AuthService {
       },
     );
     const refreshToken = <string>jwt.sign(
-      accessTokenPayload,
+      refreshTokenPayload,
       JWT_REFRESH_SECRET,
       {
         algorithm: 'HS256',

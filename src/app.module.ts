@@ -59,10 +59,6 @@ export class AppModule implements NestModule {
 
   public configure(consumer: MiddlewareConsumer) {
     const path = '/';
-    // const isDevelopment = this.configService.get<boolean>('mode.isDevelopment');
-    // if (isDevelopment) {
-    //   consumer.apply(LoggerMiddleware).forRoutes(path);
-    // }
     consumer.apply(AuthMiddleware).forRoutes(path);
   }
 }

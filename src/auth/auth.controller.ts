@@ -22,17 +22,17 @@ export const Cookies = createParamDecorator(
   },
 );
 
+const REFRESH_TOKEN = 'refreshToken';
+
 @Controller('auth')
 export class AuthController {
   private readonly refreshCookieOptions: CookieOptions = {
-    // maxAge: expiresTimeOfRefresh,
-    maxAge: 15 * 60,
-    httpOnly: false,
+    maxAge: 15 * 60 * 1000, // TODO: use constants
+    httpOnly: false, // production = true
     secure: true,
+    sameSite: 'none', // production = true
   };
-  constructor(private readonly authService: AuthService) {
-    this.refreshCookieOptions.sameSite = 'none';
-  }
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('check-candidate')
@@ -53,7 +53,7 @@ export class AuthController {
   ) {
     const user = await this.authService.registration(dto);
     const { refreshToken, accessToken } = this.authService.generateTokens(user);
-    res.cookie('refreshToken', refreshToken, this.refreshCookieOptions);
+    res.cookie(REFRESH_TOKEN, refreshToken, this.refreshCookieOptions);
     res.status(HttpStatus.OK);
     return { accessToken };
   }
@@ -65,7 +65,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
     const { refreshToken, accessToken } = await this.authService.login(dto);
-    res.cookie('refreshToken', refreshToken, this.refreshCookieOptions);
+    res.cookie(REFRESH_TOKEN, refreshToken, this.refreshCookieOptions);
     res.status(HttpStatus.OK);
     return { accessToken };
   }
@@ -73,16 +73,16 @@ export class AuthController {
   @Public()
   @Post('refresh')
   async refresh(
-    @Cookies('refreshToken') token: string,
+    @Cookies(REFRESH_TOKEN) token: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
     const result = await this.authService.refresh(token);
     if (!result) {
-      res.clearCookie('refreshToken');
+      res.clearCookie(REFRESH_TOKEN);
       throw new UnauthorizedException('Please login.');
     }
     const { refreshToken, accessToken } = result;
-    res.cookie('refreshToken', refreshToken, this.refreshCookieOptions);
+    res.cookie(REFRESH_TOKEN, refreshToken, this.refreshCookieOptions);
     res.status(HttpStatus.OK);
     return { accessToken };
   }
@@ -95,7 +95,7 @@ export class AuthController {
   ) {
     const { all = false } = body || {};
     await this.authService.logout(user, all);
-    res.clearCookie('refreshToken');
+    res.clearCookie(REFRESH_TOKEN);
     res.status(HttpStatus.OK);
   }
 
