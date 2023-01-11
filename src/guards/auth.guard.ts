@@ -1,5 +1,4 @@
 import {
-  // BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -21,10 +20,7 @@ export class AuthGuard implements CanActivate {
       this.reflector.get<boolean>(PUBLIC, context.getHandler()) ?? false;
     if (classPublic || handlerPublic) return true;
 
-    const { xsrf, user } = context.switchToHttp().getRequest<ApiRequest>();
-    if (!xsrf) {
-      // throw new BadRequestException('Missing XSRFToken');
-    }
+    const { user } = context.switchToHttp().getRequest<ApiRequest>();
     if (!user) {
       throw new UnauthorizedException();
     }
