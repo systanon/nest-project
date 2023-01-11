@@ -1,5 +1,19 @@
-import { IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+
+export const minLengthPasword = 5;
+
+export class CheckCandidateDto {
+  @IsOptional()
+  @IsEmail()
+  @IsString()
+  email: string;
+  @IsOptional()
+  @IsString()
+  login: string;
+}
+
 export class RegistrationDto {
+  @IsEmail()
   @IsString()
   email: string;
   @IsString()
@@ -8,13 +22,16 @@ export class RegistrationDto {
   lastName: string;
   @IsString()
   login: string;
+  @MinLength(minLengthPasword)
   @IsString()
   password: string;
 }
 
 export class LoginDto {
+  // TODO: add custom validator
   @IsString()
-  email: string;
+  loginOrEmail: string;
+  @MinLength(minLengthPasword)
   @IsString()
   password: string;
 }

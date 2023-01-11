@@ -25,6 +25,7 @@ import { Filters } from '../types/filters';
 import { GetFilters } from '../decorators/filters.decorator';
 import { Response } from 'express';
 import { User } from 'src/decorators/user.decorator';
+import { CachedUser } from 'src/types/cached-user';
 
 @Controller('notations')
 export class NotationsController {
@@ -35,7 +36,7 @@ export class NotationsController {
     @GetPagination() pagination: Pagination,
     @GetFilters() filters: Filters,
     @Res({ passthrough: true }) res: Response,
-    @User() user: any,
+    @User() user: CachedUser,
   ): Promise<Notation[]> {
     const { data, total, pages } = await this.notationsService.getAll(
       user.userId,
@@ -50,19 +51,19 @@ export class NotationsController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string, @User() user: any): Promise<Notation> {
+  getOne(@Param('id') id: string, @User() user: CachedUser): Promise<Notation> {
     return this.notationsService.getById(user.userId, id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-control', 'none')
-  create(@Body() dto: NotationCreateDto, @User() user: any) {
+  create(@Body() dto: NotationCreateDto, @User() user: CachedUser) {
     return this.notationsService.create(user.userId, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @User() user: any) {
+  remove(@Param('id') id: string, @User() user: CachedUser) {
     return this.notationsService.remove(user.userId, id);
   }
 
@@ -70,7 +71,7 @@ export class NotationsController {
   replace(
     @Body() dto: NotationReplaceDto,
     @Param('id') id,
-    @User() user: any,
+    @User() user: CachedUser,
   ): Promise<Notation> {
     return this.notationsService.update(user.userId, id, dto);
   }
@@ -79,7 +80,7 @@ export class NotationsController {
   update(
     @Body() dto: NotationUpdateDto,
     @Param('id') id,
-    @User() user: any,
+    @User() user: CachedUser,
   ): Promise<Notation> {
     return this.notationsService.update(user.userId, id, dto);
   }

@@ -6,6 +6,8 @@
 .env.local
 .env.*.local
 
+/upload-files
+
 # Logs  
 logs
 *.log

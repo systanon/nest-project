@@ -21,6 +21,7 @@ import { Response, Express } from 'express';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { SIZE } from 'src/utils/file';
 import { User } from 'src/decorators/user.decorator';
+import { CachedUser } from 'src/types/cached-user';
 
 const _MAX_FILE_SIZE = 5;
 const MAX_FILE_SIZE = _MAX_FILE_SIZE * SIZE.MiB;
@@ -42,7 +43,7 @@ export class FilesController {
         }),
     )
     file: Express.Multer.File,
-    @User() user: any,
+    @User() user: CachedUser,
   ) {
     if (!file) {
       throw new BadRequestException('File is missing in the file field');
@@ -56,7 +57,7 @@ export class FilesController {
   async uploadManyFiles(
     @UploadedFiles()
     files: Array<Express.Multer.File>,
-    @User() user: any,
+    @User() user: CachedUser,
   ) {
     if (!files || files.length === 0) {
       throw new BadRequestException('File is missing');
@@ -78,7 +79,7 @@ export class FilesController {
     @GetPagination() pagination: Pagination,
     @GetFilters() filters: Filters,
     @Res({ passthrough: true }) res: Response,
-    @User() user: any,
+    @User() user: CachedUser,
   ): Promise<FileDocument[]> {
     const { data, total, pages } = await this.filesService.getAll(
       user,

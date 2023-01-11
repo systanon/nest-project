@@ -9,12 +9,13 @@ import { writeFile } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import { UPLOAD_DIRNAME, UPLOAD_URL } from 'src/constants';
 import { howManyPages } from 'src/utils/pagination';
+import { CachedUser } from 'src/types/cached-user';
 
 @Injectable()
 export class FilesService {
   constructor(@InjectModel(File.name) private fileModel: Model<FileDocument>) {}
 
-  async save(user: any, file: Express.Multer.File): Promise<string> {
+  async save(user: CachedUser, file: Express.Multer.File): Promise<string> {
     const { originalname, mimetype, buffer, size } = file;
     const date = new Date().toISOString().split('T')[0];
     const id = uuidv4();
@@ -39,7 +40,7 @@ export class FilesService {
   }
 
   async getAll(
-    user: any,
+    user: CachedUser,
     { offset, limit }: Pagination,
     { search }: Filters,
   ): Promise<{
