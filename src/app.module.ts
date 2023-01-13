@@ -15,6 +15,7 @@ import { FilesModule } from './files/files.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NotationsModule } from './notations/notations.module';
 import { RealtimeModule } from './realtime/realtime.module';
+import { RemoteStorageModule } from './remote-storage/remote-storage.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TodosModule } from './todos/todos.module';
 import { UsersModule } from './users/users.module';
@@ -40,6 +41,7 @@ import { resolve } from 'path';
         index: false,
       },
     }),
+    RemoteStorageModule,
   ],
   controllers: [],
   providers: [
