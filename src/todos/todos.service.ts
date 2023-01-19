@@ -14,7 +14,7 @@ export class TodosService {
 
   async getAll(
     { offset, limit }: Pagination,
-    { search }: Filters,
+    { search, sort }: Filters,
   ): Promise<{
     data: Array<TodoDocument>;
     total: number;
@@ -40,7 +40,7 @@ export class TodosService {
         .lean<number>(),
       this.todoModel
         .find<TodoDocument>(filter, projection, options)
-        .sort({ createdAt: 1 }),
+        .sort(sort.length > 0 ? sort : { updatedAt: 1 }),
     ];
     const [total, data] = await Promise.all(promises);
 

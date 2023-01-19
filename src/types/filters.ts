@@ -1,4 +1,4 @@
 export interface Filters {
-  sort?: { field: string; by: 'ASC' | 'DESC' }[];
+  sort?: [string, 'asc' | 'desc'][];
   search?: { field: string; value: string }[];
 }

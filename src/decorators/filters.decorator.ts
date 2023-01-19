@@ -1,6 +1,7 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { Request } from 'express';
+import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+
 import { Filters } from '../types/filters';
+import { Request } from 'express';
 
 export const GetFilters = createParamDecorator(
   (data, ctx: ExecutionContext): Filters => {
@@ -11,6 +12,7 @@ export const GetFilters = createParamDecorator(
       search: [],
     };
 
+    // TODO: move to Sort decorator
     // create array of sort
     if (req.query.sort) {
       const sortArray = req.query.sort.toString().split(',');
@@ -18,20 +20,11 @@ export const GetFilters = createParamDecorator(
         const sortBy = sortItem[0];
         switch (sortBy) {
           case '-':
-            return {
-              field: sortItem.slice(1),
-              by: 'ASC',
-            };
+            return [sortItem.slice(1), 'asc'];
           case '+':
-            return {
-              field: sortItem.slice(1),
-              by: 'ASC',
-            };
+            return [sortItem.slice(1), 'desc'];
           default:
-            return {
-              field: sortItem.trim(),
-              by: 'DESC',
-            };
+            return [sortItem.trim(), 'asc'];
         }
       });
     }
