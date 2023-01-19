@@ -5,11 +5,19 @@ import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { Pagination } from '../types/pagination';
 import { Filters } from '../types/filters';
+import { howManyPages } from 'src/utils/pagination';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  getAll({ offset, limit }: Pagination, { search }: Filters): Promise<User[]> {
+  async getAll(
+    { offset, limit }: Pagination,
+    { search, sort }: Filters,
+  ): Promise<{
+    data: Array<UserDocument>;
+    total: number;
+    pages: number;
+  }> {
     const filter: Record<string, any> = {};
     if (search.length > 0) {
       filter.$or = search.map(({ field, value }) => ({
@@ -20,7 +28,25 @@ export class UsersService {
     const projection = {
       __v: 0,
     };
-    return this.userModel.find(filter, projection, options).exec();
+
+    const promises = [
+      this.userModel
+        .find(filter, {
+          _id: 1,
+        })
+        .countDocuments()
+        .lean<number>(),
+      this.userModel
+        .find<UserDocument>(filter, projection, options)
+        .sort(sort.length > 0 ? sort : { updatedAt: 1 }),
+    ];
+    const [total, data] = await Promise.all(promises);
+
+    return {
+      data: data as Array<UserDocument>,
+      total: total as number,
+      pages: howManyPages(total as number, limit),
+    };
   }
 
   getById(id: string): Promise<UserDocument> {

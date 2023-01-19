@@ -6,28 +6,35 @@ import {
   Delete,
   Param,
   Patch,
-  HttpCode,
-  HttpStatus,
-  Header,
-  Query,
+  Res,
 } from '@nestjs/common';
-import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
+import { UserUpdateDto } from './dto/user.dto';
 import { UsersService } from './users.service';
-import { User } from './schemas/user.schema';
+import { User, UserDocument } from './schemas/user.schema';
 import { Pagination } from '../types/pagination';
 import { GetPagination } from '../decorators/pagination.decorator';
 import { Filters } from '../types/filters';
 import { GetFilters } from '../decorators/filters.decorator';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
-  getAll(
+  async getAll(
     @GetPagination() pagination: Pagination,
     @GetFilters() filters: Filters,
-  ): Promise<User[]> {
-    return this.usersService.getAll(pagination, filters);
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<UserDocument[]> {
+    const { data, total, pages } = await this.usersService.getAll(
+      pagination,
+      filters,
+    );
+
+    res.setHeader('X-Total-Count', total);
+    res.setHeader('X-Total-Pages', pages);
+
+    return data;
   }
 
   @Get(':id')
