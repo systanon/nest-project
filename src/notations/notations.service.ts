@@ -21,7 +21,7 @@ export class NotationsService {
   async getAll(
     userId: string,
     { offset, limit }: Pagination,
-    { search }: Filters,
+    { search, sort }: Filters,
   ): Promise<{
     data: Array<Notation>;
     total: number;
@@ -47,7 +47,7 @@ export class NotationsService {
         .lean(),
       this.notationModel
         .find(filter, projection, options)
-        .sort({ createdAt: 1 }),
+        .sort(sort.length > 0 ? sort : { updatedAt: 1 }),
     ];
     const [total, data] = await Promise.all(promises);
 
