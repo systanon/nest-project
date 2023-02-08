@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { CachedUser } from './cached-user';
 
 export type Identity = Promise<{ id: number }>;
