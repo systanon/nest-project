@@ -14,8 +14,8 @@ async function bootstrap() {
     allowedHeaders: [
       'Content-Type',
       'Authorization',
-      'X-Page-Count',
-      'X-Total-Count',
+      // 'X-Page-Count',
+      // 'X-Total-Count',
     ],
     credentials: true,
   });
