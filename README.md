@@ -1,3 +1,20 @@
+# Readme
+
+## Docker
+
+```bash
+docker build --build-arg DATA_BASE_URL="mongodb+srv://user:password@cluster.xxxx.mongodb.net/?retryWrites=true&w=majority" --build-arg CORS_URL="http://domain1.com;http://domain2.com" .
+docker images
+docker run -d -p 3000:3000 IMAGE_ID
+# use http://localhost:3000
+docker ps
+docker stop CONTAINER_ID
+docker rm CONTAINER_ID
+docker ps
+docker rmi IMAGE_ID
+docker images
+```
+
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
