@@ -3,9 +3,12 @@
 ## Docker
 
 ```bash
-docker build --build-arg DATA_BASE_URL="mongodb+srv://user:password@cluster.xxxx.mongodb.net/?retryWrites=true&w=majority" --build-arg CORS_URL="http://domain1.com;http://domain2.com" .
+docker build .
 docker images
-docker run -d -p 3000:3000 IMAGE_ID
+docker run -d -p 3000:3000 \
+  -e "DATA_BASE_URL=mongodb+srv://user:password@cluster.xxxx.mongodb.net/?retryWrites=true&w=majority" \
+  -e "CORS_URL=http://domain1.com;http://domain2.com" \
+  IMAGE_ID
 # use http://localhost:3000
 docker ps
 docker stop CONTAINER_ID
