@@ -7,7 +7,7 @@ import {
 import { CheckCandidateDto, LoginDto, RegistrationDto } from './dto/auth.dto';
 import { User, UserDocument } from './schemas/auth.schema';
 import { UsersService } from 'src/users/users.service';
-import { UnixTimestamp } from 'src/types/time';
+import { Time, UnixTimestamp } from 'src/types/time';
 import { CachedUser } from 'src/types/cached-user';
 import { toUnixTime } from 'src/utils/time';
 
@@ -125,7 +125,7 @@ export class AuthService {
       JWT_ACCESS_SECRET,
       {
         algorithm: 'HS256',
-        expiresIn: 1 * 60,
+        expiresIn: toUnixTime(30 * Time.Minutes),
         notBefore: 0,
         subject: 'accessToken',
       },
@@ -135,7 +135,7 @@ export class AuthService {
       JWT_REFRESH_SECRET,
       {
         algorithm: 'HS256',
-        expiresIn: 15 * 60,
+        expiresIn: toUnixTime(3 * Time.Days),
         notBefore: 0,
         subject: 'refreshToken',
       },

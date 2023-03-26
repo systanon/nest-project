@@ -14,6 +14,7 @@ import { CookieOptions, Response } from 'express';
 import { Public } from 'src/decorators/public.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { CachedUser } from 'src/types/cached-user';
+import { refreshCookieMaxAge } from 'src/constants';
 
 export const Cookies = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
@@ -27,7 +28,7 @@ const REFRESH_TOKEN = 'refreshToken';
 @Controller('auth')
 export class AuthController {
   private readonly refreshCookieOptions: CookieOptions = {
-    maxAge: 15 * 60 * 1000, // TODO: use constants
+    maxAge: refreshCookieMaxAge,
     httpOnly: false, // production = true
     secure: true,
     sameSite: 'none', // production = true
